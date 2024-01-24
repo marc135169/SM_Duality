@@ -66,7 +66,16 @@ protected:
 	float rotationSpeed = 80;
 #pragma endregion
 
-
+#pragma region TimerShield
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|TimerShield")
+	float radius = 350;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|TimerShield")
+	bool shieldReady = false;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|TimerShield")
+	float currentTime = 0;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|TimerShield")
+	float maxTime = 5; // temporaire pour debug 30 sinon
+#pragma endregion
 public:
 	
 	ACPP_Jolyne();
@@ -82,6 +91,7 @@ protected:
 	void Shield(const FInputActionValue& _value);
 	void HealPet(const FInputActionValue& _value);
 	void PetOrderGoTo(const FInputActionValue& _value);
+	float IncreaseTime(float& _current, float& _maxTime);
 	UFUNCTION(BlueprintCallable)
 	void DebugText(FString _text);
 	UFUNCTION()

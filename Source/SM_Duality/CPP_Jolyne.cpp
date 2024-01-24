@@ -25,6 +25,15 @@ void ACPP_Jolyne::BeginPlay()
 	InitInput();
 	onDeath.AddDynamic(this, &ACPP_Jolyne::SetIsDead);
 }
+void ACPP_Jolyne::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	if (!shieldReady) 
+	{
+		currentTime = IncreaseTime(currentTime, maxTime);
+	}
+}
+
 
 void ACPP_Jolyne::DebugText(FString _text)
 {
@@ -35,6 +44,21 @@ void ACPP_Jolyne::SetIsDead(bool _value)
 {
 	isDead = _value;
 }
+
+float ACPP_Jolyne::IncreaseTime(float& _current, float& _maxTime)
+{
+	float _newTime = _current + GetWorld()->DeltaTimeSeconds;
+	if (_newTime >= _maxTime)
+	{
+		shieldReady = true;
+		DebugText("shieldIsReady");
+		_newTime = 0;										
+	}
+	return _newTime;
+}
+
+		
+		
 
 #pragma region overlap et perte de vie TODO
 void ACPP_Jolyne::ManageOverlap(AActor* _overlapped, AActor* _overlap)
@@ -55,11 +79,6 @@ void ACPP_Jolyne::TakeHunterDamage(const float& _value)
 }
 #pragma endregion
 
-void ACPP_Jolyne::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 
 #pragma region Input 
 // rajouter clic gauche(forcer un deplacement), clic droit(bouclier), espace(saut), ctrl(soin pet)
@@ -109,6 +128,12 @@ void ACPP_Jolyne::Jump(const FInputActionValue& _value)
 void ACPP_Jolyne::Shield(const FInputActionValue& _value)
 {
 	DebugText("shield");
+	const UWorld* _world = GetWorld();
+	if (!_world || !shieldReady)return;
+	FVector _loc = GetActorLocation();
+	DrawDebugSphere(_world, _loc, radius, 50, FColor::Blue, false, 5.0f, 0, 2);
+	// TODO fonction qui detruit les projectiles avec les params :: (FVector position _loc, float radius) 
+	shieldReady = false;
 }
 void ACPP_Jolyne::HealPet(const FInputActionValue& _value)
 {
