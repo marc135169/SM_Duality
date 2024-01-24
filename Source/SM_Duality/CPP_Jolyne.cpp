@@ -61,8 +61,9 @@ void ACPP_Jolyne::Tick(float DeltaTime)
 
 }
 
-#pragma region Input(ZQSD, AE, MOUSE) 
+#pragma region Input 
 // rajouter clic gauche(forcer un deplacement), clic droit(bouclier), espace(saut), ctrl(soin pet)
+#pragma region Input(ZQSD, AE, MOUSE)
 void ACPP_Jolyne::InitInput()
 {
 	ULocalPlayer* _localPlayer = GetWorld()->GetFirstPlayerController()->GetLocalPlayer();
@@ -99,6 +100,25 @@ void ACPP_Jolyne::Rotate(const FInputActionValue& _value)
 	const float _rotationValue = _value.Get<float>() * _delta * rotationSpeed;
 	AddControllerYawInput(_rotationValue);
 }// MouseX , E,A .
+#pragma endregion
+#pragma region Input(clicLeft/right, Space, Ctrl)
+void ACPP_Jolyne::Jump(const FInputActionValue& _value)
+{
+	DebugText("Jump");
+}
+void ACPP_Jolyne::Shield(const FInputActionValue& _value)
+{
+	DebugText("shield");
+}
+void ACPP_Jolyne::HealPet(const FInputActionValue& _value)
+{
+	DebugText("Heal");
+}
+void ACPP_Jolyne::PetOrderGoTo(const FInputActionValue& _value)
+{
+	DebugText("Valabas");
+}
+#pragma endregion
 void ACPP_Jolyne::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
@@ -114,6 +134,11 @@ void ACPP_Jolyne::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	_inputCompo->BindAction(inputToMoveRgt, ETriggerEvent::Completed, this, &ACPP_Jolyne::MoveRight);
 	_inputCompo->BindAction(inputToRotate, ETriggerEvent::Triggered, this, &ACPP_Jolyne::Rotate);
 	_inputCompo->BindAction(inputToRotate, ETriggerEvent::Completed, this, &ACPP_Jolyne::Rotate);
+
+	_inputCompo->BindAction(inputToJump, ETriggerEvent::Completed, this, &ACPP_Jolyne::Jump);
+	_inputCompo->BindAction(inputToShield, ETriggerEvent::Completed, this, &ACPP_Jolyne::Shield);
+	_inputCompo->BindAction(inputToHeal, ETriggerEvent::Completed, this, &ACPP_Jolyne::HealPet);
+	_inputCompo->BindAction(inputToOrder, ETriggerEvent::Completed, this, &ACPP_Jolyne::PetOrderGoTo);
 		
 	//le mettre a completed permet de renvoyer 0 si on appuie plus Pour ANIMATION!
 }
