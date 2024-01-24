@@ -35,6 +35,14 @@ class SM_DUALITY_API ACPP_Jolyne : public ACharacter
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
 	TObjectPtr<UInputMappingContext> mappingContext = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
+	TObjectPtr<UInputAction> inputToJump = nullptr;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
+	TObjectPtr<UInputAction> inputToShield = nullptr;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
+	TObjectPtr<UInputAction> inputToHeal = nullptr;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
+	TObjectPtr<UInputAction> inputToOrder = nullptr;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
 	TObjectPtr<UInputAction> inputToMoveRgt = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
 	TObjectPtr<UInputAction> inputToMoveFwd = nullptr;
@@ -70,6 +78,10 @@ protected:
 	void MoveForward(const FInputActionValue& _value);
 	void MoveRight(const FInputActionValue& _value);
 	void Rotate(const FInputActionValue& _value);
+	void Jump(const FInputActionValue& _value);
+	void Shield(const FInputActionValue& _value);
+	void HealPet(const FInputActionValue& _value);
+	void PetOrderGoTo(const FInputActionValue& _value);
 	UFUNCTION(BlueprintCallable)
 	void DebugText(FString _text);
 	UFUNCTION()
