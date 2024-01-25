@@ -76,6 +76,21 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|TimerShield")
 	float maxTime = 5; // temporaire pour debug 30 sinon
 #pragma endregion
+
+#pragma region Jump
+private:
+	// Variable pour la hauteur du saut
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Jump", meta = (ClampMin = "0.0"))
+	float heightJump = 400;
+
+	// Variable pour la gravité
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Jump")
+	float graviteInitiale = 0;
+
+	// Variable pour déterminer si le personnage est en train de sauter
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Jump")
+	bool inJump = false;
+#pragma endregion
 public:
 	
 	ACPP_Jolyne();
@@ -83,6 +98,7 @@ public:
 protected:
 	
 	virtual void BeginPlay() override;
+	void ApplyGravity();
 	void InitInput();
 	void MoveForward(const FInputActionValue& _value);
 	void MoveRight(const FInputActionValue& _value);
@@ -99,6 +115,7 @@ protected:
 	UFUNCTION()
 	void ManageOverlap(AActor* _overlapped, AActor* _overlap);
 	void TakeHunterDamage(const float& _value);
+
 public:	
 	
 	virtual void Tick(float DeltaTime) override;
