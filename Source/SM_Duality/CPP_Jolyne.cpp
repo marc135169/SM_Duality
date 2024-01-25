@@ -13,9 +13,13 @@ ACPP_Jolyne::ACPP_Jolyne()
 	PrimaryActorTick.bCanEverTick = true;
 	springArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	cameraComponent = CreateDefaultSubobject<UCameraComponent>("camera");
+	//cameraComponent->AddLocalRotation. // tentative de mettre la camera dans le bonne angle -25 en pitch ou Y
 	//spawnComponent = CreateDefaultSubobject<>("Spawn"); peut être un spawn de notre pet si il meurt
 	springArmComponent->SetupAttachment(RootComponent);
+	springArmComponent->TargetArmLength = 500.0f;
+	springArmComponent->TargetOffset.Z = 200;
 	cameraComponent->SetupAttachment(springArmComponent);
+	//graviteInitiale = GetCharacterMovement()->GravityScale; // peut etre pas besoin en laissant toujours une gravité
 
 }
 
@@ -57,6 +61,17 @@ float ACPP_Jolyne::IncreaseTime(float& _current, float& _maxTime)
 	return _newTime;
 }
 
+void ACPP_Jolyne::ApplyGravity()
+{
+	// modifie la gravité fonction appelé pendant le saut ou au moment de toucher le sol
+	if (inJump)
+	{
+		// Simuler une gravité constante pendant le saut
+		FVector gravity = FVector(0.0f, 0.0f, -1.0f) * graviteInitiale;
+		inJump = false;
+		//GetCharacterMovement()->AddForce(gravity);// peut etre pas besoin en laissant toujours une gravité
+	}
+}
 		
 		
 
@@ -81,8 +96,6 @@ void ACPP_Jolyne::TakeHunterDamage(const float& _value)
 
 
 #pragma region Input 
-// rajouter clic gauche(forcer un deplacement), clic droit(bouclier), espace(saut), ctrl(soin pet)
-#pragma region Input(ZQSD, AE, MOUSE)
 void ACPP_Jolyne::InitInput()
 {
 	ULocalPlayer* _localPlayer = GetWorld()->GetFirstPlayerController()->GetLocalPlayer();
@@ -91,6 +104,7 @@ void ACPP_Jolyne::InitInput()
 	if (!_inputSystem)return;
 	_inputSystem->AddMappingContext(mappingContext, 0);
 }
+#pragma region Input(ZQSD, AE, MOUSE)
 void ACPP_Jolyne::MoveForward(const FInputActionValue& _value)
 {
 	if (isDead)return;
@@ -123,8 +137,21 @@ void ACPP_Jolyne::Rotate(const FInputActionValue& _value)
 #pragma region Input(clicLeft/right, Space, Ctrl)
 void ACPP_Jolyne::Jump(const FInputActionValue& _value)
 {
-	DebugText("Jump");
+	if (!inJump)
+	{
+		DebugText("Jump");
+		inJump = true;
+		//UWorld _world = GetWorld()->;
+		// Désactiver la gravité pendant le saut
+		//GetCharacterMovement()->GravityScale = 0.0f; // peut etre pas besoin en laissant toujours une gravité
+
+		// Appliquer l'impulsion verticale pour simuler le saut
+		LaunchCharacter(FVector(0.0f, 0.0f, 1.0f) * heightJump, false, true);
+	}
+	DebugText("alreadyJump");
+	ApplyGravity();
 }
+
 void ACPP_Jolyne::Shield(const FInputActionValue& _value)
 {
 	DebugText("shield");
