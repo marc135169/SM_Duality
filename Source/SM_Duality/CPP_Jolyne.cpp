@@ -4,12 +4,14 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputLibrary.h"
 #include "EnhancedInputComponent.h"
+#include "GhostGameModeBase.h"
+#include "GameFramework/WorldSettings.h"
 
 // Sets default values
 ACPP_Jolyne::ACPP_Jolyne()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	//PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bCanEverTick = true;
 	springArmComponent = CreateDefaultSubobject<USpringArmComponent>("SpringArm");
 	cameraComponent = CreateDefaultSubobject<UCameraComponent>("camera");
@@ -70,10 +72,12 @@ void ACPP_Jolyne::ApplyGravity()
 	// modifie la gravité fonction appelé pendant le saut ou au moment de toucher le sol
 	if (inJump)
 	{
+		
 		// Simuler une gravité constante pendant le saut
 		FVector gravity = FVector(0.0f, 0.0f, -1.0f) * graviteInitiale;
 		inJump = false;
 		//GetCharacterMovement()->AddForce(gravity);// peut etre pas besoin en laissant toujours une gravité
+		
 	}
 }
 		
@@ -112,7 +116,7 @@ void ACPP_Jolyne::InitInput()
 void ACPP_Jolyne::MoveForward(const FInputActionValue& _value)
 {
 	if (isDead)return;
-	DebugText("Fwd");
+	//DebugText("Fwd");
 	const FVector _fwd = GetActorForwardVector();
 	const float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _movementValue = _value.Get<float>() * _delta * moveSpeed;
@@ -122,7 +126,7 @@ void ACPP_Jolyne::MoveForward(const FInputActionValue& _value)
 void ACPP_Jolyne::MoveRight(const FInputActionValue& _value)
 {
 	if (isDead)return;
-	DebugText("Rgt");
+	//DebugText("Rgt");
 	const FVector _rgt = GetActorRightVector();
 	const float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _movementValue = _value.Get<float>() * _delta * moveSpeed;
@@ -132,7 +136,7 @@ void ACPP_Jolyne::MoveRight(const FInputActionValue& _value)
 void ACPP_Jolyne::Rotate(const FInputActionValue& _value)
 {
 	if (isDead)return;
-	DebugText("Rotate");
+	//DebugText("Rotate");
 	const float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _rotationValue = _value.Get<float>() * _delta * rotationSpeed;
 	AddControllerYawInput(_rotationValue);
@@ -145,14 +149,10 @@ void ACPP_Jolyne::Jump(const FInputActionValue& _value)
 	{
 		DebugText("Jump");
 		inJump = true;
-		//UWorld _world = GetWorld()->;
-		// Désactiver la gravité pendant le saut
-		//GetCharacterMovement()->GravityScale = 0.0f; // peut etre pas besoin en laissant toujours une gravité
-
-		// Appliquer l'impulsion verticale pour simuler le saut
 		LaunchCharacter(FVector(0.0f, 0.0f, 1.0f) * heightJump, false, true);
 	}
 	DebugText("alreadyJump");
+	//rajouter un cooldown qui set inJump
 	ApplyGravity();
 }
 
