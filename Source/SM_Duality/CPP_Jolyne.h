@@ -7,8 +7,8 @@
 //#include "InputMappingContext.h"
 #include <GameFramework/SpringArmComponent.h>
 #include "GameFramework/Character.h"
-#include "../../../../../../../Unreal5.2/UE_5.2/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputDeveloperSettings.h"
-#include "../../../../../../../Unreal5.2/UE_5.2/Engine/Plugins/EnhancedInput/Source/EnhancedInput/Public/EnhancedInputLibrary.h"
+#include "EnhancedInputDeveloperSettings.h"
+#include "EnhancedInputLibrary.h"
 #include "CPP_Jolyne.generated.h"
 
 UCLASS()
@@ -17,9 +17,11 @@ class SM_DUALITY_API ACPP_Jolyne : public ACharacter
 	GENERATED_BODY()
 
 #pragma region Event
+protected:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, bool, _value); // dans animation ui besoin du bool, pour faire la fonction qui active l'event
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnDeath onDeath;
+	
 #pragma endregion
 
 #pragma region Component
@@ -54,15 +56,17 @@ class SM_DUALITY_API ACPP_Jolyne : public ACharacter
 
 #pragma region AnimationUI
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|Animation") //Pour animation de mort et UI
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI") //Pour animation de mort et UI
 	float health = 10;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|Animation")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI") //Pour animation de mort et UI
+	float maxHealth = 10;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI")
 	bool isDead = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|Animation")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI")
 	float rightAxisAnime = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|Animation")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI")
 	float forwardAxisAnime = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|Animation")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI")
 	float rotationSpeed = 80;
 #pragma endregion
 
@@ -94,7 +98,8 @@ private:
 public:
 	
 	ACPP_Jolyne();
-
+public: // EVENT UI
+	FOnDeath& OnDeath() { return onDeath; }
 protected:
 	
 	virtual void BeginPlay() override;
@@ -114,7 +119,7 @@ protected:
 	void SetIsDead(bool _value);
 	UFUNCTION()
 	void ManageOverlap(AActor* _overlapped, AActor* _overlap);
-	void TakeHunterDamage(const float& _value);
+	void TakeDamage(const float& _value);
 
 public:	
 	
