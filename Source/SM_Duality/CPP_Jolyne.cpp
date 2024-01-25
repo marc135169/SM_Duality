@@ -27,6 +27,7 @@ void ACPP_Jolyne::BeginPlay()
 {
 	Super::BeginPlay();
 	InitInput();
+	health = maxHealth;
 	onDeath.AddDynamic(this, &ACPP_Jolyne::SetIsDead);
 }
 void ACPP_Jolyne::Tick(float DeltaTime)
@@ -36,6 +37,9 @@ void ACPP_Jolyne::Tick(float DeltaTime)
 	{
 		currentTime = IncreaseTime(currentTime, maxTime);
 	}
+	//fonction temporaire debug UI
+	health;
+	if(health <= 0)onDeath.Broadcast(true);
 }
 
 
@@ -83,11 +87,11 @@ void ACPP_Jolyne::ManageOverlap(AActor* _overlapped, AActor* _overlap)
 	if (!_overlapped || !_overlap)return;
 	//ACPP_Projectile* _projectile = Cast<ACPP_Projectile>(_overlap);
 	/*if (!_projectile)return;
-	TakeHunterDamage(_projectile->GetDamage());*///TakeHunterDamage(damage)
+	TakeDamage(_projectile->GetDamage());*///TakeHunterDamage(damage)
 	if (health <= 0)
 		onDeath.Broadcast(true);
 }
-void ACPP_Jolyne::TakeHunterDamage(const float& _value)
+void ACPP_Jolyne::TakeDamage(const float& _value)
 {
 	health -= _value;
 	health = health < 0 ? 0 : health; // if(health < 0) health = 0 else health = health;
