@@ -28,8 +28,10 @@ protected:
 #pragma endregion
 
 #pragma region Component
-	/*UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
-	TObjectPtr<> spawnComponent = nullptr;*/
+public:
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
+	bool swapController = false;
+protected:
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
 	TObjectPtr<USpringArmComponent> springArmComponent = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
@@ -114,6 +116,7 @@ public:
 	ACPP_Jolyne();
 public: // EVENT UI
 	FOnDeath& OnDeath() { return onDeath; }
+	void SetBoolSwap() { swapController = false; }
 protected:
 	
 	virtual void BeginPlay() override;
