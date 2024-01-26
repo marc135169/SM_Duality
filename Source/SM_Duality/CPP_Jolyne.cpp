@@ -42,6 +42,10 @@ void ACPP_Jolyne::Tick(float DeltaTime)
 	{
 		currentTime = IncreaseTime(currentTime, maxTime);
 	}
+	if (!jumpReady)
+	{
+		currentTime0 = IncreaseTime0(currentTime0, maxTime0);
+	}
 	//fonction temporaire debug UI
 	health;
 	if(health <= 0)onDeath.Broadcast(true);
@@ -69,16 +73,26 @@ float ACPP_Jolyne::IncreaseTime(float& _current, float& _maxTime)
 	}
 	return _newTime;
 }
-
+float ACPP_Jolyne::IncreaseTime0(float& _current, float& _maxTime)
+{
+	float _newTime = _current + GetWorld()->DeltaTimeSeconds;
+	if (_newTime >= _maxTime)
+	{
+		jumpReady = true;
+		DebugText("jumpReady");
+		_newTime = 0;
+	}
+	return _newTime;
+}
 void ACPP_Jolyne::ApplyGravity()
 {
 	// modifie la gravité fonction appelé pendant le saut ou au moment de toucher le sol
-	if (inJump)
+	if (jumpReady)
 	{
 		
 		// Simuler une gravité constante pendant le saut
 		FVector gravity = FVector(0.0f, 0.0f, -1.0f) * graviteInitiale;
-		inJump = false;
+		jumpReady = false;
 		//GetCharacterMovement()->AddForce(gravity);// peut etre pas besoin en laissant toujours une gravité
 		
 	}
@@ -158,17 +172,11 @@ void ACPP_Jolyne::Rotate(const FInputActionValue& _value)
 #pragma region Input(clicLeft/right, Space, Ctrl)
 void ACPP_Jolyne::Jump(const FInputActionValue& _value)
 {
-	if (!inJump)
-	{
-		DebugText("Jump");
-		inJump = true;
-		LaunchCharacter(FVector(0.0f, 0.0f, 1.0f) * heightJump, false, true);
-	}
-	DebugText("alreadyJump");
-	//rajouter un cooldown qui set inJump
-	ApplyGravity();
+	if (!jumpReady)return
+	DebugText("Jump");
+	LaunchCharacter(FVector(0.0f, 0.0f, 1.0f) * heightJump, false, true);
+	jumpReady = false;
 }
-
 void ACPP_Jolyne::Shield(const FInputActionValue& _value)
 {
 	DebugText("shield");

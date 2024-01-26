@@ -101,8 +101,13 @@ private:
 	float graviteInitiale = 0;
 
 	// Variable pour déterminer si le personnage est en train de sauter
+protected:
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Jump")
-	bool inJump = false;
+	bool jumpReady = true;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Jump")
+	float currentTime0 = 0;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Jump")
+	float maxTime0 = 1.5;
 #pragma endregion
 public:
 	
@@ -123,6 +128,7 @@ protected:
 	void HealPet(const FInputActionValue& _value);
 	void PetOrderGoTo(const FInputActionValue& _value);
 	float IncreaseTime(float& _current, float& _maxTime);
+	float IncreaseTime0(float& _current, float& _maxTime);
 	UFUNCTION(BlueprintCallable)
 	void DebugText(FString _text);
 	UFUNCTION()
