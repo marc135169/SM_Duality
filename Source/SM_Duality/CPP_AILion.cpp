@@ -35,10 +35,9 @@ void ACPP_AILion::Tick(float DeltaTime)
 
 void ACPP_AILion::Init()
 {
+    playerRef = Cast<ACPP_Jolyne>(GetWorld()->GetFirstPlayerController()->GetPawn());
 	if(!playerRef)return;
 	canMove = true;
-	
-	
 }
 
 bool ACPP_AILion::GetCanMove()

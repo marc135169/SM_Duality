@@ -91,7 +91,7 @@ void ACPP_GhostPawn::MoveRight(const FInputActionValue& _value)
 void ACPP_GhostPawn::Rotate(const FInputActionValue& _value)
 {
 	//if (isDead)return;
-	DebugText("Rotate");
+	//DebugText("Rotate");
 	const float _delta = GetWorld()->DeltaTimeSeconds;
 	//const float _rotationValue = _value.Get<float>()* rotationSpeed;
 	const float _rotationValue = _value.Get<float>() * _delta * rotationSpeed;
@@ -102,10 +102,10 @@ void ACPP_GhostPawn::Rotate(const FInputActionValue& _value)
 void ACPP_GhostPawn::Fly(const FInputActionValue& _value)
 {
 
-	DebugText("fly");
+	//DebugText("fly");
 	////DebugText(_value);
 	//if (isDead)return;
-	DebugText("Up/down");
+	//DebugText("Up/down");
 	const FVector _up = GetActorUpVector();
 	const float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _movementValue = _value.Get<float>() * _delta * moveSpeed;

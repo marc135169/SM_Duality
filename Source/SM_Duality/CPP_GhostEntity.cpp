@@ -98,10 +98,10 @@ void ACPP_GhostEntity::Rotate(const FInputActionValue& _value)
 void ACPP_GhostEntity::Fly(const FInputActionValue& _value)
 {
 	
-	DebugText("fly");
+	//DebugText("fly");
 	////DebugText(_value);
 	//if (isDead)return;
-	DebugText("Up/down");
+	//DebugText("Up/down");
 	const FVector _up = GetActorUpVector();
 	const float _delta = GetWorld()->DeltaTimeSeconds;
 	const float _movementValue = _value.Get<float>()*_delta* moveSpeed;
@@ -112,7 +112,7 @@ void ACPP_GhostEntity::Fly(const FInputActionValue& _value)
 }
 void ACPP_GhostEntity::SwapEntity(const FInputActionValue& _value) //f
 {
-	DebugText("swap");
+	//DebugText("swap");
 	//fonction qui detruit ghost et qui reprend le controle de Jolyne
 	APlayerController* _playerController = GetWorld()->GetFirstPlayerController();
 	if (_playerController)
