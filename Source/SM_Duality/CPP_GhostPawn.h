@@ -1,58 +1,53 @@
-
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Character.h"
 #include "Camera/CameraComponent.h"
 //#include "InputMappingContext.h"
 #include <GameFramework/SpringArmComponent.h>
-#include "GameFramework/Character.h"
+
 #include "EnhancedInputDeveloperSettings.h"
 #include "EnhancedInputLibrary.h"
-#include "CPP_Jolyne.generated.h"
+#include "CPP_GhostPawn.generated.h"
 
-
-class ACPP_GhostEntity;
-class ACPP_GhostPawn;
+class ACPP_Jolyne;
 UCLASS()
-class SM_DUALITY_API ACPP_Jolyne : public ACharacter
+class SM_DUALITY_API ACPP_GhostPawn : public APawn
 {
 	GENERATED_BODY()
-
 #pragma region Event
 protected:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDeath, bool, _value); // dans animation ui besoin du bool, pour faire la fonction qui active l'event
 	UPROPERTY(BlueprintAssignable, BlueprintCallable)
 	FOnDeath onDeath;
-	
+
 #pragma endregion
 
 #pragma region Component
-	/*UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
-	TObjectPtr<> spawnComponent = nullptr;*/
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
+	TObjectPtr<ACPP_Jolyne> playerRef = nullptr;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
+	TObjectPtr<UStaticMeshComponent> staticMesh = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
 	TObjectPtr<USpringArmComponent> springArmComponent = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
 	TObjectPtr<UCameraComponent> cameraComponent = nullptr;
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
-	TSubclassOf<ACPP_GhostPawn> entityToSpawn = nullptr;
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
-	TObjectPtr<ACPP_GhostPawn> entity = nullptr;
 #pragma endregion
 
 #pragma region Input
+
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
+	TObjectPtr<UInputAction> inputToSwapEntity = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
 	TObjectPtr<UInputMappingContext> mappingContext = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
-	TObjectPtr<UInputAction> inputToJump = nullptr;
+	TObjectPtr<UInputAction> inputToFly = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
-	TObjectPtr<UInputAction> inputToSwap = nullptr;
+	TObjectPtr<UInputAction> inputToHeal = nullptr; // peut etre heal notre perso
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
-	TObjectPtr<UInputAction> inputToShield = nullptr;
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
-	TObjectPtr<UInputAction> inputToHeal = nullptr;
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
-	TObjectPtr<UInputAction> inputToOrder = nullptr;
+	TObjectPtr<UInputAction> inputToInteract = nullptr; // actionneur de levier ou de structure destructible ou faire tomber des mur pour faire une passerelle
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
 	TObjectPtr<UInputAction> inputToMoveRgt = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
@@ -66,9 +61,9 @@ protected:
 #pragma region AnimationUI
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI") //Pour animation de mort et UI
-	float health = 10;
+		float health = 10;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI") //Pour animation de mort et UI
-	float maxHealth = 10;
+		float maxHealth = 10;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI")
 	bool isDead = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI")
@@ -76,66 +71,44 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI")
 	float forwardAxisAnime = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI")
-	float rotationSpeed = 80;
+	float rotationSpeed = 30;
 #pragma endregion
 
-#pragma region TimerShield
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|TimerShield")
-	float radius = 350;
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|TimerShield")
-	bool shieldReady = false;
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|TimerShield")
-	float currentTime = 0;
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|TimerShield")
-	float maxTime = 5; // temporaire pour debug 30 sinon
-#pragma endregion
-
-#pragma region Jump
+#pragma region Fly
 private:
 	// Variable pour la hauteur du saut
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Jump", meta = (ClampMin = "0.0"))
-	float heightJump = 400;
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Jump", meta = (ClampMin = "0.0")) // peut etre inutile
+		float heightJump = 400;
 
 	// Variable pour la gravité
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Jump")
 	float graviteInitiale = 0;
 
-	// Variable pour déterminer si le personnage est en train de sauter
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Jump")
-	bool inJump = false;
+
 #pragma endregion
 public:
-	
-	ACPP_Jolyne();
-public: // EVENT UI
-	FOnDeath& OnDeath() { return onDeath; }
+
+	ACPP_GhostPawn();
+
 protected:
-	
-	virtual void BeginPlay() override;
-	void ApplyGravity();
+
 	void InitInput();
 	void MoveForward(const FInputActionValue& _value);
 	void MoveRight(const FInputActionValue& _value);
 	void Rotate(const FInputActionValue& _value);
-	void Jump(const FInputActionValue& _value);
-	void SwapEntity(const FInputActionValue& _value);
-	void Shield(const FInputActionValue& _value);
-	void HealPet(const FInputActionValue& _value);
-	void PetOrderGoTo(const FInputActionValue& _value);
-	float IncreaseTime(float& _current, float& _maxTime);
-	UFUNCTION(BlueprintCallable)
+	void Fly(const FInputActionValue& _value);
+	void Interact(const FInputActionValue& _value);
+	void Heal(const FInputActionValue& _value);
 	void DebugText(FString _text);
-	UFUNCTION()
-	void SetIsDead(bool _value);
-	UFUNCTION()
-	void ManageOverlap(AActor* _overlapped, AActor* _overlap);
-	void TakeDamage(const float& _value);
+	//void GravityOff();
+	void SwapEntity(const FInputActionValue& _value);
+	virtual void BeginPlay() override;
 
-public:	
-	
+public:
+	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
+	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };

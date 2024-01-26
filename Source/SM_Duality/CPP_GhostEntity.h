@@ -12,6 +12,7 @@
 #include "EnhancedInputLibrary.h"
 #include "CPP_GhostEntity.generated.h"
 
+class ACPP_Jolyne;
 UCLASS()
 class SM_DUALITY_API ACPP_GhostEntity : public ACharacter
 {
@@ -25,8 +26,8 @@ protected:
 #pragma endregion
 
 #pragma region Component
-	/*UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
-	TObjectPtr<> spawnComponent = nullptr;*/
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
+	TObjectPtr<ACPP_Jolyne> playerRef = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
 	TObjectPtr<USpringArmComponent> springArmComponent = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|Component")
@@ -34,9 +35,9 @@ protected:
 #pragma endregion
 
 #pragma region Input
-	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
-	TObjectPtr<UInputAction> inputToSwapGameMode = nullptr;
 
+	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
+	TObjectPtr<UInputAction> inputToSwapEntity = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
 	TObjectPtr<UInputMappingContext> mappingContext = nullptr;
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
@@ -98,7 +99,7 @@ protected:
 	void Heal(const FInputActionValue& _value);
 	void DebugText(FString _text);
 	//void GravityOff();
-	void SwapGameMode(const FInputActionValue& _value);
+	void SwapEntity(const FInputActionValue& _value);
 	virtual void BeginPlay() override;
 
 public:	

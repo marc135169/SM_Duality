@@ -5,6 +5,9 @@
 #include "EnhancedInputLibrary.h"
 #include "EnhancedInputComponent.h"
 #include "GhostGameModeBase.h"
+#include "CPP_GhostEntity.h"
+#include "CPP_GhostPawn.h"
+
 #include "GameFramework/WorldSettings.h"
 
 // Sets default values
@@ -81,7 +84,17 @@ void ACPP_Jolyne::ApplyGravity()
 	}
 }
 		
-		
+void ACPP_Jolyne::SwapEntity(const FInputActionValue& _value)
+{
+	DebugText("Swap");
+	FVector _add = FVector{ 150,0,0 };
+	entity = GetWorld()->SpawnActor<ACPP_GhostPawn>(entityToSpawn, GetActorLocation() + _add, GetActorRotation());
+	APlayerController* _playerController = GetWorld()->GetFirstPlayerController();
+	if (_playerController)
+	{
+		_playerController->Possess(entity);
+	}
+}
 
 #pragma region overlap et perte de vie TODO
 void ACPP_Jolyne::ManageOverlap(AActor* _overlapped, AActor* _overlap)
@@ -190,7 +203,7 @@ void ACPP_Jolyne::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 	_inputCompo->BindAction(inputToMoveRgt, ETriggerEvent::Completed, this, &ACPP_Jolyne::MoveRight);
 	_inputCompo->BindAction(inputToRotate, ETriggerEvent::Triggered, this, &ACPP_Jolyne::Rotate);
 	_inputCompo->BindAction(inputToRotate, ETriggerEvent::Completed, this, &ACPP_Jolyne::Rotate);
-
+	_inputCompo->BindAction(inputToSwap, ETriggerEvent::Completed, this, &ACPP_Jolyne::SwapEntity);
 	_inputCompo->BindAction(inputToJump, ETriggerEvent::Completed, this, &ACPP_Jolyne::Jump);
 	_inputCompo->BindAction(inputToShield, ETriggerEvent::Completed, this, &ACPP_Jolyne::Shield);
 	_inputCompo->BindAction(inputToHeal, ETriggerEvent::Completed, this, &ACPP_Jolyne::HealPet);
