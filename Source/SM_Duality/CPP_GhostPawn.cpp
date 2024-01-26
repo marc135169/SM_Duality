@@ -123,7 +123,7 @@ void ACPP_GhostPawn::SwapEntity(const FInputActionValue& _value) //f
 	{
 		_playerController->Possess(playerRef);
 	}
-	playerRef->SetBoolSwap();
+	//playerRef->SetBoolSwap();
 	Destroy();
 }
 
