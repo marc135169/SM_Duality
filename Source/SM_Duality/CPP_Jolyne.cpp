@@ -46,6 +46,16 @@ void ACPP_Jolyne::Tick(float DeltaTime)
 	{
 		currentTime0 = IncreaseTime0(currentTime0, maxTime0);
 	}
+	if (!swapController) 
+	{
+		InitInput();
+		swapController = true;
+		UInputMappingContext* inputMappingContext = UInputMappingContext::GetContext("InputMappigContext");
+		if (inputMappingContext)
+		{
+			InputMappingContext->ChangeContext("ContextB");
+		}
+	}
 	//fonction temporaire debug UI
 	health;
 	if(health <= 0)onDeath.Broadcast(true);
@@ -97,6 +107,10 @@ void ACPP_Jolyne::ApplyGravity()
 		
 	}
 }
+//void ACPP_Jolyne::SetBoolSwap() 
+//{
+//
+//}
 		
 void ACPP_Jolyne::SwapEntity(const FInputActionValue& _value)
 {
@@ -108,6 +122,7 @@ void ACPP_Jolyne::SwapEntity(const FInputActionValue& _value)
 	{
 		_playerController->Possess(entity);
 	}
+	//swapController = false;
 }
 
 #pragma region overlap et perte de vie TODO
