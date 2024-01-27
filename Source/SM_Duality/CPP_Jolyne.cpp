@@ -46,7 +46,7 @@ void ACPP_Jolyne::Tick(float DeltaTime)
 	{
 		currentTime0 = IncreaseTime0(currentTime0, maxTime0);
 	}
-	if (!swapController) 
+	/*if (!swapController) 
 	{
 		InitInput();
 		swapController = true;
@@ -55,7 +55,7 @@ void ACPP_Jolyne::Tick(float DeltaTime)
 		{
 			InputMappingContext->ChangeContext("ContextB");
 		}
-	}
+	}*/
 	//fonction temporaire debug UI
 	health;
 	if(health <= 0)onDeath.Broadcast(true);
