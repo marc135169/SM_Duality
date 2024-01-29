@@ -12,7 +12,8 @@ class SM_DUALITY_API ACPP_Action : public AActor
 	GENERATED_BODY()	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<AActor> target;
-	UPROPERTY(EditAnywhere)
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TArray<AActor*> allTarget; 
 public:	
 	// Sets default values for this actor's properties

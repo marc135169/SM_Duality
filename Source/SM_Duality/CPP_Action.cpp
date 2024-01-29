@@ -34,6 +34,8 @@ void ACPP_Action::BeginPlay()
 			allTarget[i]->Destroy();
 		}
 	}
+
+	this->Destroy();
 }
 
 // Called every frame

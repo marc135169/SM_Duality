@@ -36,6 +36,11 @@ protected:
 	TObjectPtr<UCameraComponent> cameraComponent = nullptr;
 #pragma endregion
 
+	UPROPERTY(EditAnywhere)
+	float maxDistanceAllowed = 200;
+	UPROPERTY(EditAnywhere)
+	FVector spawnPos = FVector(0);
+	
 #pragma region Input
 
 	UPROPERTY(EditAnywhere, Category = "PlayerCharracter|InputMovement")
@@ -105,8 +110,10 @@ protected:
 	void Interact(const FInputActionValue& _value);
 	void Heal(const FInputActionValue& _value);
 	void DebugText(FString _text);
+	void CheckDistanceWithPlayer(float _maxDist);
 	//void GravityOff();
 	void SwapEntity(const FInputActionValue& _value);
+	void SetPLayerPos();
 	virtual void BeginPlay() override;
 
 public:

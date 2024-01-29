@@ -81,7 +81,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI")
 	float forwardAxisAnime = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerCharracter|AnimationUI")
-	float rotationSpeed = 80;
+	float rotationSpeed = 30;
 #pragma endregion
 
 #pragma region TimerShield

@@ -10,6 +10,7 @@
 #include "PlayerGameModeBase.h"
 #include "CPP_Jolyne.h"
 #include "GameFramework/WorldSettings.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 ACPP_GhostPawn::ACPP_GhostPawn()
@@ -33,18 +34,34 @@ void ACPP_GhostPawn::BeginPlay()
 	Super::BeginPlay();
 	InitInput();
 	playerRef = Cast<ACPP_Jolyne>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	if(!playerRef)return;
+	//UE_LOG(LogTemp, Warning, TEXT("TEST Begin"));
+	SetPLayerPos();
+	
 }
 
 // Called every frame
 void ACPP_GhostPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	CheckDistanceWithPlayer(maxDistanceAllowed);
 
 }
 void ACPP_GhostPawn::DebugText(FString _text)
 {
 	UE_LOG(LogTemp, Error, TEXT("%s"), *_text);
 }
+
+//Secure for detect if the ghost is maxRange from player
+void ACPP_GhostPawn::CheckDistanceWithPlayer(float _maxDist)
+{
+	if(!playerRef)return;
+	if(UKismetMathLibrary::Vector_Distance(playerRef->GetActorLocation(), GetActorLocation()) > _maxDist)
+	{
+		SetActorLocation(spawnPos);
+	}
+}
+
 //void ACPP_GhostEntity::GravityOff()
 //{
 //	
@@ -149,6 +166,16 @@ void ACPP_GhostPawn::SwapEntity(const FInputActionValue& _value) //f
 	}
 	//playerRef->SetBoolSwap();
 	Destroy();
+}
+
+void ACPP_GhostPawn::SetPLayerPos()
+{
+	if(!playerRef)return;
+	FVector _addOffset = FVector{ 150,0,0 };
+	FRotator playerRotation = playerRef->GetActorRotation();
+	FVector offsetInWorldSpace = playerRotation.RotateVector(_addOffset);
+    	//spawnPos = playerRef->GetActorLocation() + _addOffset;
+	spawnPos = playerRef->GetActorLocation() + offsetInWorldSpace;
 }
 
 void ACPP_GhostPawn::Interact(const FInputActionValue& _value)
